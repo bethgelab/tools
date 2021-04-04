@@ -11,4 +11,14 @@ RUN pip install --no-cache-dir torch==1.8.1+cu111 torchvision==0.9.1+cu111 \
 # This is needed to read TFRecord files in PyTorch
 RUN pip install --no-cache-dir tfrecord==1.11 
 
-CMD [ "bash" ]
+#########################
+# This block is to run Jupyter
+RUN pip install notebook
+# -m option creates a fake writable home folder for Jupyter.
+RUN groupadd -g 1000 bethgelab && \
+    useradd -m -r -u 1000 -g bethgelab bethgelab
+USER bethgelab
+#########################
+
+#CMD [ "bash" ]
+CMD [ "jupyter", "notebook", "--no-browser", "--ip", "0.0.0.0"]
