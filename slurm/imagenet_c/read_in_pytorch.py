@@ -10,8 +10,8 @@
 
 from PIL import Image
 import numpy as np, io
-import torch, torchvision.transforms as trn
 from tfrecord.torch.dataset import TFRecordDataset
+import torch, torchvision.transforms as trn
 from torchvision.datasets import ImageFolder
 import matplotlib.pyplot as plt
 
