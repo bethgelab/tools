@@ -1,4 +1,13 @@
 # %%
+# The easiest/fastest way (in my opinion) to learn about the storage format "TFRecord" and 
+# the library "tfrecord", is to download a tfrecord file from the slurm cluster locally 
+# (i.e. with linux scp) and run this script in Visual Studio Code or Pycharm. 
+# (You don't need a GPU) 
+# Then you can:
+# 1. Run blocks of code and use breakpoints to inspect variables;
+# 2. Access to documentation and the underlying code (to see for example how TFRecordDataset
+#       was implemented and how the function arguments are used);
+
 from PIL import Image
 import numpy as np, io
 import torch, torchvision.transforms as trn
@@ -10,8 +19,8 @@ import matplotlib.pyplot as plt
 # imagenetc_path = '/mnt/qb/bethge/gpachitariu37/datasets/imagenet_c/'
 imagenetc_path = '/home/george/datasets/tfrecord/'
 
-# TFRecordDataset object reads records from TFRecords 
-# files and passes them to PyTorch.
+# This is where the magic happens. TFRecordDataset object reads 
+# records from TFRecords files and passes them to PyTorch.
 def load_dataset(transform=None):
     filename="zoom_blur_1"
     return TFRecordDataset(
@@ -25,6 +34,7 @@ def load_dataset(transform=None):
                           'class_label': 'byte',
                           'image_raw':  'byte' }, 
             transform=transform)
+
 # %%
 # Print the value of corruption_type column from the first record (image)
 raw_dataset = load_dataset()
@@ -34,6 +44,7 @@ first_record = next(iter(raw_loader))
 print('1. First record corruption type: ', end=' ')
 print(first_record['corruption_type'].\
         numpy().tobytes().decode("utf-8"))
+
 # %%
 #Use transforms
 transformed_dataset = load_dataset( transform=trn.Compose([ 
@@ -46,5 +57,6 @@ transformed_loader = torch.utils.data.DataLoader(
         shuffle=False, num_workers=1
         )
 transformed_record = next(iter(transformed_loader))
+# Both Visual Studio Code and Jupyter can display images 
 plt.imshow(transformed_record.squeeze().permute(1,2,0))
 plt.show()

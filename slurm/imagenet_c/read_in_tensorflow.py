@@ -3,6 +3,9 @@ import tensorflow as tf
 import numpy as np
 import IPython.display as display
 
+# imagenetc_path = '/mnt/qb/bethge/gpachitariu37/datasets/imagenet_c/'
+imagenetc_path = '/home/george/datasets/tfrecord/'
+
 filenames = [filename]
 raw_dataset = tf.data.TFRecordDataset(filenames)
 raw_dataset
