@@ -5,7 +5,7 @@
 # (You don't need a GPU) 
 # Then you can:
 # 1. Run blocks of code and use breakpoints to inspect variables;
-# 2. Access to documentation and the underlying code (to see for example how TFRecordDataset
+# 2. Access the documentation and the underlying code (to see for example how TFRecordDataset
 #       was implemented and how the function arguments are used);
 
 from PIL import Image
@@ -15,7 +15,7 @@ import torch, torchvision.transforms as trn
 from torchvision.datasets import ImageFolder
 import matplotlib.pyplot as plt
 
-# I run the notebook locally, but both folders contain the same data. 
+# I run the python script locally on my laptop, but both folders contain the same data. 
 # imagenetc_path = '/mnt/qb/bethge/gpachitariu37/datasets/imagenet_c/'
 imagenetc_path = '/home/george/datasets/tfrecord/'
 

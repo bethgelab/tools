@@ -1,4 +1,0 @@
-##############################
-srun --gres=gpu:1 singularity exec --nv -B /scratch_local \
-    -B /mnt/qb/datasets/ -B /mnt/qb/bethge/gpachitariu37/datasets docker://ubuntu bash
-time cp /mnt/qb/bethge/gpachitariu37/datasets/imagenet_c/gaussian_noise_1.tfrecords $SCRATCH

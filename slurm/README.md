@@ -27,7 +27,7 @@ In both methods 1 and 3 the model can start using the records (images) after the
 
 Method 3 is much faster than method 1: 8 minutes vs 64 minutes. My assumption is that the difference is caused by sending many small files through the network.
 
-There are in this repository examples on how to convert and read data in TFRecord format. `convert_dataset_1_data.py` and `convert_dataset_2_data.py` convert ImageNet-C to TFRecord. And `read_in_pytorch.py` and `read_in_tensorflow.py` have examples on how to read the TFRecord files.
+There are in this repository examples on how to convert and read data in TFRecord format. `dataset_loading/convert_dataset_1_data.py` and `dataset_loading/convert_dataset_2_data.py` convert ImageNet-C to TFRecord. And `dataset_loading/read_in_pytorch.py` and `dataset_loading/read_in_tensorflow.py` have examples on how to read the TFRecord files.
 
 More documention on data loading: https://mxnet.apache.org/versions/1.7.0/api/architecture/note_data_loading
 
