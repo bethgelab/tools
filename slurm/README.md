@@ -7,7 +7,7 @@ Hi, this intro contains engineering guidelines and expected performance of commo
 `srun --gres=gpu:1 --partition=gpu-2080ti-interactive singularity exec --nv -B /scratch_local docker://ubuntu echo "Hello world!"`
     
 - `--nv` loads the NVIDIA drivers. To check that it worked run `nvidia-smi`;
-- `-B /scratch_local` mounts the $SCRATCH folder.
+- `-B /scratch_local` mounts the $SCRATCH folder;
 
 2. Use the `$SCRATCH` folder inside the Slurm job. It's deleted at the end of your job so you don't need to worry about cleaning the files you create on the computing nodes. It's also on SSD drive, so it's fast. 
 
