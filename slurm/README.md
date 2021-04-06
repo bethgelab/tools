@@ -6,17 +6,15 @@ Hi, this intro contains engineering guidelines and expected performance of commo
 
 `srun --gres=gpu:1 --partition=gpu-2080ti-interactive singularity exec --nv -B /scratch_local docker://ubuntu echo "Hello world!"`
     
-    - `--nv` loads the NVIDIA drivers. To check that it worked run `nvidia-smi`;
-    - `-B /scratch_local` mounts the $SCRATCH folder.
+- `--nv` loads the NVIDIA drivers. To check that it worked run `nvidia-smi`;
+- `-B /scratch_local` mounts the $SCRATCH folder.
 
-2. Use the $SCRATCH folder inside the Slurm job. It's deleted at the end of your job so you don't need to worry about cleaning the files you create on the computing nodes. It's also on SSD drive, so it's fast. 
+2. Use the `$SCRATCH` folder inside the Slurm job. It's deleted at the end of your job so you don't need to worry about cleaning the files you create on the computing nodes. It's also on SSD drive, so it's fast. 
 
 3. Your personal folder in QB storage (path: `/mnt/qb/bethge`) is also on SSD. But the network is a performance bottleneck (QB storage is on different servers than Slurm). This folder is still very good for saving results, checkpoints of models or saving a dataset. 
 
 ## 2. Dataset loading
-The datasets are usually stored on the QB machines which are different than the Slurm machines. This means that the dataset needs to be copied over. The best performance was found when rewriting the dataset as a few big files and using the storage format TFRecord from Tensorflow (or RecordIO from MxNet would be good too). This is because in TFRecord and RecordIO the records (images) is stored sequentially which allow for a program to read (stream) continuously. Reading data from disk or streaming data through the network is faster for continuous data. 
-
-Tensorflow and Pytorch also allow for buffering the data ahead which minimises the pauses caused by waiting for new data to arrive.
+The datasets are usually stored on the QB machines which are different than the Slurm machines. This means that the dataset needs to be copied over. The best performance was found when rewriting the dataset as a few big files and using the storage format TFRecord from Tensorflow (or RecordIO from MxNet would be good too). This is because in TFRecord and RecordIO the records (images) is stored sequentially which allow for a program to read (stream) continuously. Reading data from disk or streaming data through the network is faster for continuous data. Tensorflow and Pytorch also allow for buffering the data ahead which minimises the pauses caused by waiting for new data to arrive.
 
 Methods tried out to load a dataset on Slurm:
 1. Copy over the dataset folder with the images inside in the Slurm job. Duration: 64 minutes. 
