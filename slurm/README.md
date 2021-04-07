@@ -11,7 +11,7 @@ Hi, this intro contains engineering guidelines and expected performance of commo
 
 2. Use the `$SCRATCH` folder inside the Slurm job. It's deleted at the end of your job so you don't need to worry about cleaning the files you create on the computing nodes. It's also on SSD drive, so it's fast. 
 
-3. Your personal folder in QB storage (path: `/mnt/qb/bethge`) is also on SSD. But the network is a performance bottleneck (QB storage is on different servers than Slurm). This folder is still very good for saving results, checkpoints of models or saving a dataset. 
+3. You have (or you can ask for) 2 personal folders. A fast (SSD drive) but smaller one on path `/mnt/qb/home` that is good for small files that you need often (e.g., code). And a slower (HDD drive) but bigger folder on path `/mnt/qb/bethge` that is good for larger files where speed is less important (e.g., checkpoints, saving results, saving a dataset).
 
 ## 2. Dataset loading
 The datasets are usually stored on the QB machines which are different than the Slurm machines. This means that the dataset needs to be copied over. The best performance was found when rewriting the dataset as a few big files and using the storage format TFRecord from Tensorflow (or RecordIO from MxNet would be good too). This is because in TFRecord and RecordIO the records (images) is stored sequentially which allow for a program to read (stream) continuously. Reading data from disk or streaming data through the network is faster for continuous data. Tensorflow and Pytorch also allow for buffering the data ahead which minimises the pauses caused by waiting for new data to arrive.
