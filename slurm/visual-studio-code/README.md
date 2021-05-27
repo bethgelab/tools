@@ -45,4 +45,4 @@ port=10412
 ssh -N -f -L localhost:10100:bg-slurmb-bm-2:$port $username@slurm
 ```
 
-Finally go in the browser to [localhost:10100](localhost:10100). If the setup was done correctly you should see Visual Code.
+Finally go in the browser to [localhost:10100](localhost:10100). If the setup was done correctly you should see Visual Studio Code.
