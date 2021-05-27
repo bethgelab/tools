@@ -1,6 +1,6 @@
-Visual Code on Slurm
+Visual Studio Code on Slurm
 
-There is an implementation of Visual Code that runs in the browser (like Jupyter) and it's called Code Server:
+There is an implementation of Visual Studio Code that runs in the browser (like Jupyter) and it's called Code Server:
 https://github.com/cdr/code-server
 
 ### Initial setup 
@@ -19,8 +19,8 @@ mkdir vs_temp
 cd vs_temp
 wget https://github.com/microsoft/vscode-python/releases/download/2020.10.332292344/ms-python-release.vsix
 # you need to install the plugin, but you can only install it using the code-server container
-srun --partition=gpu-2080ti-interactive singularity \
-         run docker://georgepachitariu/slurm-visual-code:1.1 \
+srun --partition=gpu-2080ti-interactive singularity run \
+         /home/bethge/gpachitariu37/slurm-visual-code_latest.sif \
          code-server --install-extension ./vs_temp/ms-python-release.vsix
 
 ```
@@ -33,7 +33,7 @@ port=10412 # pick your favorite number > 10000
 srun -w "bg-slurmb-bm-2" --time 12:0:0 --gres=gpu:1 \
     --partition="gpu-2080ti-interactive" singularity \
     run --nv -B /scratch_local -B /mnt/qb/datasets \
-    docker://georgepachitariu/slurm-visual-code:1.1 \
+    /home/bethge/gpachitariu37/slurm-visual-code_latest.sif \
     code-server --bind-addr 0.0.0.0 --port $port
 ```
 
