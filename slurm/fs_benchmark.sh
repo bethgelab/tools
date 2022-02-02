@@ -42,7 +42,7 @@ function test {
         if [ "$test_type" = "small_files" ]; then
             echo "hello world" > "$exp_path/testfile_${id}"
         else
-            cp "$absolute_fs_path/1gb_file" "$exp_path/testfile_${id}"
+            cp "$absolute_fs_path/1gb_file_$task_id" "$exp_path/testfile_${id}"
         fi
     done
     finish=$(date +%s.%N)
@@ -66,25 +66,29 @@ function test {
                 Deleting time (seconds): $(bc <<< "$finish-$start")" >> "$logs"
 }
 
+task_id=$RANDOM
+
 # /scratch = Lustre, (accessible via the Infiniband network)
 karolina_fs_paths=("/home/it4i-gpach/gpach_tuebingen_test"
                     "/mnt/proj2/dd-21-20/gpach_tuebingen_test"
                     "/scratch/project/dd-21-20/gpach_tuebingen_test")
+#logs=/home/it4i-gpach/gpach_tuebingen_test/logs/$task_id
 
 tuebingen_fs_paths=("/home/bethge/gpachitariu37/gpach_tuebingen_test"
-                                            "/mnt/qb/bethge/gpachitariu37/gpach_tuebingen_test"
-                                            "/mnt/qb/work/bethge/gpachitariu37/gpach_tuebingen_test")
+                                            "/mnt/qb/work/bethge/gpachitariu37/gpach_tuebingen_test"
+                                            "/mnt/qb/bethge/gpachitariu37/gpach_tuebingen_test")
+logs=/mnt/qb/work/bethge/gpachitariu37/fs_logs/$task_id
 
-task_id=$RANDOM
-logs=/home/it4i-gpach/gpach_tuebingen_test/logs/$task_id
 echo "Starting time $(date)"  >> $logs
 
-for path in "${karolina_fs_paths[@]}"; do
+for path in "${tuebingen_fs_paths[@]}"; do
     test "$path" small_files 1000
 
-    head -c 1G < /dev/urandom > "$path"/1gb_file
-    test "$path" large_files 10
-    rm "$path"/1gb_file
+    if [[ $path != /home*  ]]; then
+        head -c 1G < /dev/urandom > "$path/1gb_file_$task_id"
+        test "$path" large_files 10
+        rm "$path/1gb_file_$task_id"
+    fi
 
     printf "\n" >> $logs
 done
