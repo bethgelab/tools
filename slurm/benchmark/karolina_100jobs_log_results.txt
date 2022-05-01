@@ -1,0 +1,17 @@
+/home/it4i-gpach/gpach_tuebingen_test Test type: small_files Number of files: 1000                 Writing time (seconds): mean:5.32 min:1.89 max:8.47 count:111
+/home/it4i-gpach/gpach_tuebingen_test Test type: small_files Number of files: 1000                 Reading time (seconds): mean:0.77 min:0.71 max:0.96 count:111
+/home/it4i-gpach/gpach_tuebingen_test Test type: small_files Number of files: 1000                 Deleting time (seconds): mean:1.88 min:0.29 max:3.49 count:111
+/mnt/proj2/dd-21-20/gpach_tuebingen_test Test type: small_files Number of files: 1000                 Writing time (seconds): mean:7.37 min:1.66 max:11.78 count:104
+/mnt/proj2/dd-21-20/gpach_tuebingen_test Test type: small_files Number of files: 1000                 Reading time (seconds): mean:2.55 min:0.87 max:3.71 count:104
+/mnt/proj2/dd-21-20/gpach_tuebingen_test Test type: small_files Number of files: 1000                 Deleting time (seconds): mean:2.96 min:0.46 max:5.39 count:104
+/mnt/proj2/dd-21-20/gpach_tuebingen_test Test type: large_files Number of files: 10                 Writing time (seconds): mean:176.27 min:21.86 max:242.64 count:104
+/mnt/proj2/dd-21-20/gpach_tuebingen_test Test type: large_files Number of files: 10                 Reading time (seconds): mean:1.4 min:1.09 max:1.7 count:104
+/mnt/proj2/dd-21-20/gpach_tuebingen_test Test type: large_files Number of files: 10                 Deleting time (seconds): mean:0.68 min:0.58 max:0.89 count:104
+/scratch/project/dd-21-20/gpach_tuebingen_test Test type: small_files Number of files: 1000                 Writing time (seconds): mean:1.57 min:1.48 max:1.84 count:104
+/scratch/project/dd-21-20/gpach_tuebingen_test Test type: small_files Number of files: 1000                 Reading time (seconds): mean:0.95 min:0.91 max:1.03 count:104
+/scratch/project/dd-21-20/gpach_tuebingen_test Test type: small_files Number of files: 1000                 Deleting time (seconds): mean:0.14 min:0.12 max:0.23 count:104
+/scratch/project/dd-21-20/gpach_tuebingen_test Test type: large_files Number of files: 10                 Writing time (seconds): mean:7.19 min:6.95 max:7.45 count:104
+/scratch/project/dd-21-20/gpach_tuebingen_test Test type: large_files Number of files: 10                 Reading time (seconds): mean:1.43 min:1.27 max:2.01 count:104
+/scratch/project/dd-21-20/gpach_tuebingen_test Test type: large_files Number of files: 10                 Deleting time (seconds): mean:1.27 min:0.93 max:1.56 count:104
+
+

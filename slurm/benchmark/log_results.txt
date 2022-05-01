@@ -1,0 +1,8 @@
+small files Writing time (seconds):  count:51
+small files Reading 0 time (seconds): mean:  count:51
+small files Reading 1 time (seconds):  count:51
+small files Deleting time (seconds): mean:0.21 min:0.15 max:0.3 count:51
+large_files Writing time (seconds):  count:51
+large_files Reading 0 time (seconds):  count:51
+large_files Reading 1 time (seconds):  count:51
+large_files Deleting time (seconds): mean:0.01 min:0.01 max:0.02 count:51

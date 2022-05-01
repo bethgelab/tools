@@ -1,29 +1,5 @@
 #! /bin/bash
 
-# DATASETS are lazy initialized since it can happen that a task that 
-# was finished successfully before is restarted. Then the new run should
-# skip copying the dataset.
-datasets_initialized=0
-function initialise_dataset_lazily() {
-    mecho "Copying the datasets locally"
-    mkdir "$SCRATCH"/datasets
-    tar -xf /mnt/qb/datasets/ImageNet2012.tar -C "$SCRATCH"/datasets
-    imagenet_path="$SCRATCH"/datasets/ImageNet2012    
-    mecho "Copying finished"
-
-    datasets_initialized=1
-}
-
-function archive_checkpoint() {
-    local iteration="$1"
-    echo "$(timestamp): Starting archiving checkpoint for iteration=$iteration"
-
-    # Move & overwrite new results.
-    mv -f "$job_dir"/iteration="$iteration"/checkpoint.pth "$job_dir_archive"/iteration="$iteration"
-
-    echo "$(timestamp): Finished archiving checkpoint for iteration=$iteration"
-}
-
 repo_path=/home/bethge/gpachitariu37/git/self-ensemble-visual-domain-adapt-internal
 
 function job_worker() {
@@ -35,18 +11,13 @@ function job_worker() {
     experiment_name=my_test
     experiment_path=$experiment_name/learning_rate=$lr/batch_size=$batch_size/
     job_dir=/mnt/qb/work/bethge/gpachitariu37/jobs/$experiment_path
-    job_dir_archive=/mnt/qb/bethge/gpachitariu37/jobs/$experiment_path
-    mkdir -p "$job_dir" "$job_dir_archive" # also creates intermediate directories if they don't exist
+    mkdir -p "$job_dir" # also creates intermediate directories if they don't exist
 
     for ((iteration=0; iteration<3; iteration++)); do
         iteration_dir="$job_dir"/iteration=$iteration
         if [ -e "$iteration_dir"/success ]; then
             echo "$(timestamp): Found the success flag in $iteration_dir"
             continue # we completed this iteration in a previous job run
-        fi
-    
-        if (( datasets_initialized == 0 )); then
-            initialise_dataset_lazily
         fi
 
         rm -rf "$iteration_dir" # clean previous runs
