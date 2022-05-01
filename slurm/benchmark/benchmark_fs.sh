@@ -65,7 +65,7 @@ function test {
 
 
 function run {
-    work_path="$1_$RANDOM"
+    work_path="$1"
     logs="$work_path/logs"
     mkdir "$work_path"
     
@@ -76,7 +76,7 @@ function run {
         head -c "${sizes[i]}" < /dev/urandom > "$work_path/file"
         test "$work_path" "${sizes[i]}" "${number_files[i]}"
 
-        printf "\n" >> $logs
+        printf "\n" >> "$logs"
         rm "$work_path/file"
     done
 }
@@ -97,8 +97,9 @@ paths=("/mnt/beegfs/bethge/gpachitariu37/gpach_tuebingen_test")
 experiment_suite_id=$(date +%s)
 
 for path in "${paths[@]}"; do
+    r=$RANDOM
     for a in $(seq 8); do
-        run "$path/test_$experiment_suite_id" &
+        run "$path"/test_"$experiment_suite_id"_"$r"_"$a" &
     done
     wait
 done
