@@ -8,7 +8,8 @@
 #SBATCH --tasks=1
 #SBATCH --array=0-7
 #
-# SBATCH --partition=gpu-2080ti
+#SBATCH --partition=bethge
+
 # SBATCH --cpus-per-task=8
 # SBATCH --mem=43750M 
 
