@@ -6,7 +6,7 @@
 #SBATCH --time=0-12:00
 #
 #SBATCH --tasks=1
-#SBATCH --array=0-7
+#SBATCH --array=0-6
 #
 #SBATCH --partition=bethge
 #SBATCH --nodelist=slurm-bm-79
@@ -55,6 +55,13 @@ function test {
     finish=$(date +%s.%N)
     echo "$work_path Test type: $file_size Number of files: $number_files \
                 Reading time (seconds): $(bc <<< "$finish-$start")" >> "$logs"
+
+    # Grouped Reading
+    start=$finish
+    cat "$destination_folder/*" >> /dev/null
+    finish=$(date +%s.%N)
+    echo "$work_path Test type: $file_size Number of files: $number_files \
+                Grouped Reading time (seconds): $(bc <<< "$finish-$start")" >> "$logs"
 
     # Deleting
     start=$finish
