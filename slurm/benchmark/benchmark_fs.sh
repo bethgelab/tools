@@ -9,9 +9,10 @@
 #SBATCH --array=0-7
 #
 #SBATCH --partition=bethge
+#SBATCH --nodelist=slurm-bm-79
 
-# SBATCH --cpus-per-task=8
-# SBATCH --mem=43750M 
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=43750M 
 
 # ### SBATCH --gres=gpu:1
 
