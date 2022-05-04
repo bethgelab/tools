@@ -6,14 +6,14 @@
 #SBATCH --time=0-12:00
 #
 #SBATCH --tasks=1
-#SBATCH --array=0-6
+#SBATCH --array=0-27
 #
-#SBATCH --partition=bethge
-#SBATCH --nodelist=slurm-bm-79
+#SBATCH --partition=gpu-2080ti-beegfs 
 
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=43750M 
 
+# ### SBATCH --nodelist=slurm-bm-79 # bethge
 # ### SBATCH --gres=gpu:1
 
 set -x # echo on
