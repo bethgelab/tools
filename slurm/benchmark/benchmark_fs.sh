@@ -82,27 +82,6 @@ function test_reading_grouped {
 
 }
 
-function run {
-    work_path="$1"
-    logs="$work_path/logs"
-    mkdir "$work_path"
-    
-    #sizes=(150K 1M 1G)
-    #number_files=(1000 200 10)
-    sizes=(1G)
-    number_files=(10)
-    #for i in $(seq 0 2); do
-    for i in 0; do
-        echo "Starting time for ${sizes[i]} $(date)"  >> "$logs"
-        head -c "${sizes[i]}" < /dev/urandom > "$work_path/file"
-        test "$work_path" "${sizes[i]}" "${number_files[i]}"
-
-        printf "\n" >> "$logs"
-        rm "$work_path/file"
-    done
-}
-
-
 # /scratch = Lustre, (accessible via the Infiniband network)
 # work_path=("/home/it4i-gpach/gpach_tuebingen_test"
 #                     "/mnt/proj2/dd-21-20/gpach_tuebingen_test"
@@ -112,15 +91,52 @@ function run {
 #                     "/mnt/qb/work/bethge/gpachitariu37/gpach_tuebingen_test"
 #                     "/mnt/qb/bethge/gpachitariu37/gpach_tuebingen_test")
 
-paths=("/mnt/beegfs/bethge/gpachitariu37/gpach_tuebingen_test")
+#path="/home/george/git/tools/slurm/benchmark"
+path="/mnt/beegfs/bethge/gpachitariu37/gpach_tuebingen_test"
+#paths=("/scratch/project/dd-21-20/gpach_tuebingen_test")
 
-#paths=("/home/george/git/tools/slurm/benchmark")
+processes=56
+r=$RANDOM
 experiment_suite_id=$(date +%s)
 
-for path in "${paths[@]}"; do
-    r=$RANDOM
-    for a in $(seq 56); do
-        run "$path"/test_"$experiment_suite_id"_"$r"_"$a" &
+for a in $(seq $processes); do
+    work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
+    mkdir "$work_path"
+done
+
+#sizes=(150K 1M 1G)
+#number_files=(1000 200 10)
+sizes=(1G)
+number_files=(10)
+#for i in $(seq 0 2); do
+for i in 0; do
+    for a in $(seq $processes); do
+        work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
+        head -c "${sizes[i]}" < /dev/urandom > "$work_path/file" &
     done
     wait
+
+    for a in $(seq $processes); do
+        work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
+        test_writing "$work_path" "${sizes[i]}" "${number_files[i]}" &
+    done
+    wait
+
+    for a in $(seq $processes); do
+        work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
+        test_reading "$work_path" "${sizes[i]}" "${number_files[i]}" &
+    done
+    wait
+
+    for a in $(seq $processes); do
+        work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
+        test_reading_grouped "$work_path" "${sizes[i]}" "${number_files[i]}" &
+    done
+    wait
+
+    for a in $(seq $processes); do
+        work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
+        rm "$work_path/file"
+    done    
 done
+
