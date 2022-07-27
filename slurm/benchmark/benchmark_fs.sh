@@ -51,8 +51,8 @@ function test_writing_reading {
         number_files=$((number_files+1))
     done
     finish=$(date +%s)
-    echo "$work_path $start $finish Test_type: $file_size Number_of_files: $number_files \
-                Writing_time_(seconds): $(bc <<< "$finish-$start")" >> "$logs"
+    fst="$work_path $start $finish Test_type: $file_size Number_of_files: $number_files"
+    echo "$fst Writing_time_seconds: $(bc <<< "$finish-$start")" >> "$logs"
 
     while (( $(date +%s) % 600 == 0 )); do
         sleep 0.5
@@ -69,8 +69,8 @@ function test_writing_reading {
         number_files=$((number_files+1))
     done
     finish=$(date +%s)
-    echo "$work_path $start $finish Test_type: $file_size Number_of_files: $number_files \
-                Reading_time_(seconds): $(bc <<< "$finish-$start")" >> "$logs"
+    fst="$work_path $start $finish Test_type: $file_size Number_of_files: $number_files"
+    echo "$fst Reading_time_seconds: $(bc <<< "$finish-$start")" >> "$logs"
 }
 
 function test_reading_grouped {
@@ -84,9 +84,8 @@ function test_reading_grouped {
 
     cat "$destination_folder"/* >> /dev/null
     finish=$(date +%s)
-    echo "$work_path $start $finish Test type: $file_size Number of files: $number_files \
-                Grouped Reading time (seconds): $(bc <<< "$finish-$start")" >> "$logs"
-
+    fst="$work_path $start $finish Test_type: $file_size Number_of_files: $number_files"
+    echo "$fst Grouped_reading_time_seconds: $(bc <<< "$finish-$start")" >> "$logs"
 }
 
 # /scratch = Lustre, (accessible via the Infiniband network)
