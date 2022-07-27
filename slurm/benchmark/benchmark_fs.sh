@@ -6,12 +6,12 @@
 #SBATCH --time=0-12:00
 #
 #SBATCH --tasks=1
-#SBATCH --array=0-9 #-6
+#SBATCH --array=0-15 #-6
 #
 #SBATCH --partition=gpu-2080ti-beegfs
 #SBATCH --exclude=slurm-bm-29
 
-#SBATCH --cpus-per-task=37
+#SBATCH --cpus-per-task=16
 #SBATCH --mem=43750M 
 
 # ### SBATCH --nodelist=slurm-bm-79 # bethge
@@ -37,7 +37,7 @@ function test_writing_reading {
     rm -rf "$destination_folder"
     mkdir "$destination_folder"
 
-    while (( $(date +%s) % 60 == 0 )); do
+    while (( $(date +%s) % 600 == 0 )); do
         sleep 0.5
         echo "Sleeping"
     done
@@ -46,7 +46,7 @@ function test_writing_reading {
     start=$(date +%s)
     number_files=0  
 
-    while (( $(date +%s)-start < 90 )); do
+    while (( $(date +%s)-start < 300 )); do
         cp "$file" "$destination_folder/file_${number_files}"
         number_files=$((number_files+1))
     done
@@ -54,7 +54,7 @@ function test_writing_reading {
     echo "$work_path $start $finish Test_type: $file_size Number_of_files: $number_files \
                 Writing_time_(seconds): $(bc <<< "$finish-$start")" >> "$logs"
 
-    while (( $(date +%s) % 120 == 0 )); do
+    while (( $(date +%s) % 600 == 0 )); do
         sleep 0.5
         echo "Sleeping"
     done
@@ -64,7 +64,7 @@ function test_writing_reading {
     max_number_files=$number_files
     number_files=0    
     
-    while (( $(date +%s)-start <30 && number_files<max_number_files)); do
+    while (( $(date +%s)-start < 150 && number_files<max_number_files)); do
         cat "$destination_folder/file_${number_files=}" >> /dev/null
         number_files=$((number_files+1))
     done
@@ -102,7 +102,7 @@ function test_reading_grouped {
 path="/mnt/beegfs/bethge/gpachitariu37/gpach_tuebingen_test"
 #paths=("/scratch/project/dd-21-20/gpach_tuebingen_test")
 
-processes=28
+processes=16
 r=$RANDOM
 experiment_suite_id=$(date +%s)
 
