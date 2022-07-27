@@ -6,7 +6,7 @@
 #SBATCH --time=0-12:00
 #
 #SBATCH --tasks=1
-#SBATCH --array=0 #-6
+#SBATCH --array=0-9 #-6
 #
 #SBATCH --partition=gpu-2080ti-beegfs
 #SBATCH --exclude=slurm-bm-29
@@ -27,43 +27,50 @@ set -e # exit when any command fails
 
 # scp /home/george/git/tools/slurm/benchmark_fs.sh gpachitariu37@slurm:/home/bethge/gpachitariu37
 
-function test_writing {
+function test_writing_reading {
     work_path=$1
     file_size=$2
-    number_files=$3
     logs="$work_path/logs"
     file="$work_path/file"
     destination_folder="$work_path/destination"
 
     rm -rf "$destination_folder"
     mkdir "$destination_folder"
-    
-    # Writing
-    start=$(date +%s.%N)
-    
-    for id in $(seq "$number_files"); do
-        cp "$file" "$destination_folder/file_${id}"
-    done
-    finish=$(date +%s.%N)
-    echo "$work_path $start $finish Test type: $file_size Number of files: $number_files \
-                Writing time (seconds): $(bc <<< "$finish-$start")" >> "$logs"
-}
 
-function test_reading {
-    work_path=$1
-    file_size=$2
-    number_files=$3
-    logs="$work_path/logs"
-    file="$work_path/file"
-    destination_folder="$work_path/destination"
-    start=$(date +%s.%N)
-
-    for id in $(seq "$number_files"); do
-        cat "$destination_folder/file_${id}" >> /dev/null
+    while (( $(date +%s) % 60 == 0 )); do
+        sleep 0.5
+        echo "Sleeping"
     done
-    finish=$(date +%s.%N)
-    echo "$work_path $start $finish Test type: $file_size Number of files: $number_files \
-                Reading time (seconds): $(bc <<< "$finish-$start")" >> "$logs"
+    
+    # test writing
+    start=$(date +%s)
+    number_files=0  
+
+    while (( $(date +%s)-start < 90 )); do
+        cp "$file" "$destination_folder/file_${number_files}"
+        number_files=$((number_files+1))
+    done
+    finish=$(date +%s)
+    echo "$work_path $start $finish Test_type: $file_size Number_of_files: $number_files \
+                Writing_time_(seconds): $(bc <<< "$finish-$start")" >> "$logs"
+
+    while (( $(date +%s) % 120 == 0 )); do
+        sleep 0.5
+        echo "Sleeping"
+    done
+
+    # test reading
+    start=$(date +%s)
+    max_number_files=$number_files
+    number_files=0    
+    
+    while (( $(date +%s)-start <30 && number_files<max_number_files)); do
+        cat "$destination_folder/file_${number_files=}" >> /dev/null
+        number_files=$((number_files+1))
+    done
+    finish=$(date +%s)
+    echo "$work_path $start $finish Test_type: $file_size Number_of_files: $number_files \
+                Reading_time_(seconds): $(bc <<< "$finish-$start")" >> "$logs"
 }
 
 function test_reading_grouped {
@@ -73,10 +80,10 @@ function test_reading_grouped {
     logs="$work_path/logs"
     file="$work_path/file"
     destination_folder="$work_path/destination"
-    start=$(date +%s.%N)
+    start=$(date +%s)
 
     cat "$destination_folder"/* >> /dev/null
-    finish=$(date +%s.%N)
+    finish=$(date +%s)
     echo "$work_path $start $finish Test type: $file_size Number of files: $number_files \
                 Grouped Reading time (seconds): $(bc <<< "$finish-$start")" >> "$logs"
 
@@ -95,7 +102,7 @@ function test_reading_grouped {
 path="/mnt/beegfs/bethge/gpachitariu37/gpach_tuebingen_test"
 #paths=("/scratch/project/dd-21-20/gpach_tuebingen_test")
 
-processes=56
+processes=28
 r=$RANDOM
 experiment_suite_id=$(date +%s)
 
@@ -105,9 +112,7 @@ for a in $(seq $processes); do
 done
 
 #sizes=(150K 1M 1G)
-#number_files=(1000 200 10)
 sizes=(1G)
-number_files=(10)
 #for i in $(seq 0 2); do
 for i in 0; do
     for a in $(seq $processes); do
@@ -118,25 +123,20 @@ for i in 0; do
 
     for a in $(seq $processes); do
         work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
-        test_writing "$work_path" "${sizes[i]}" "${number_files[i]}" &
+        test_writing_reading "$work_path" "${sizes[i]}" &
     done
     wait
 
-    for a in $(seq $processes); do
-        work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
-        test_reading "$work_path" "${sizes[i]}" "${number_files[i]}" &
-    done
-    wait
-
-    for a in $(seq $processes); do
-        work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
-        test_reading_grouped "$work_path" "${sizes[i]}" "${number_files[i]}" &
-    done
-    wait
+    #for a in $(seq $processes); do
+    #    work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
+    #    test_reading_grouped "$work_path" "${sizes[i]}" "${number_files[i]}" &
+    #done
+    #wait
 
     for a in $(seq $processes); do
         work_path="$path"/test_"$experiment_suite_id"_"$r"_"$a"
         rm "$work_path/file"
     done    
 done
+
 
