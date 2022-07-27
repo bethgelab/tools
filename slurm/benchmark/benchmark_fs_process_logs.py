@@ -8,6 +8,7 @@ cd /home/george/git/tools/slurm
 python benchmark_fs_process_logs.py
 """
 
+from cProfile import label
 import os
 import numpy as np
 import pandas as pd
@@ -60,3 +61,14 @@ max_write= sum_write["speed"].max()
 
 print(f"Max Read:{max_read}; Max Write:{max_write}")
 print(f"Avg Read:{sum_read['speed'].mean()}; Avg Write:{sum_write['speed'].mean()}")
+
+# %%
+import matplotlib.pyplot as plt
+
+plt.plot(sum_read.index, sum_read["speed"], label="Read")
+plt.plot(sum_write.index, sum_write["speed"], label="Write")
+plt.legend()
+plt.axes().set_xlabel("Seconds elapsed")
+plt.axes().set_ylabel("GBs / second")
+plt.show()
+# %%
