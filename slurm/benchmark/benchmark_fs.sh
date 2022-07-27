@@ -37,8 +37,8 @@ function test_writing_reading {
     rm -rf "$destination_folder"
     mkdir "$destination_folder"
 
-    while (( $(date +%s) % 600 == 0 )); do
-        sleep 0.5
+    while (( $(date +%s) % 600 != 0 )); do
+        sleep 0.4
         echo "Sleeping"
     done
     
@@ -54,8 +54,8 @@ function test_writing_reading {
     fst="$work_path $start $finish Test_type: $file_size Number_of_files: $number_files"
     echo "$fst Writing_time_seconds: $(bc <<< "$finish-$start")" >> "$logs"
 
-    while (( $(date +%s) % 600 == 0 )); do
-        sleep 0.5
+    while (( $(date +%s) % 600 != 0 )); do
+        sleep 0.4
         echo "Sleeping"
     done
 
@@ -64,7 +64,7 @@ function test_writing_reading {
     max_number_files=$number_files
     number_files=0    
     
-    while (( $(date +%s)-start < 150 && number_files<max_number_files)); do
+    while (( $(date +%s)-start < 300 && number_files<max_number_files)); do
         cat "$destination_folder/file_${number_files=}" >> /dev/null
         number_files=$((number_files+1))
     done
