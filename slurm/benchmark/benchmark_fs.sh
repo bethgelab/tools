@@ -37,7 +37,7 @@ function test_writing_reading {
     rm -rf "$destination_folder"
     mkdir "$destination_folder"
 
-    while (( $(date +%s) % 600 != 0 )); do
+    while (( $(date +%s) % 300 != 0 )); do
         sleep 0.4
         echo "Sleeping"
     done
@@ -46,7 +46,7 @@ function test_writing_reading {
     start=$(date +%s)
     number_files=0  
 
-    while (( $(date +%s)-start < 300 )); do
+    while (( $(date +%s)-start < 150 )); do
         cp "$file" "$destination_folder/file_${number_files}"
         number_files=$((number_files+1))
     done
@@ -54,7 +54,7 @@ function test_writing_reading {
     fst="$work_path $start $finish Test_type: $file_size Number_of_files: $number_files"
     echo "$fst Writing_time_seconds: $(bc <<< "$finish-$start")" >> "$logs"
 
-    while (( $(date +%s) % 600 != 0 )); do
+    while (( $(date +%s) % 300 != 0 )); do
         sleep 0.4
         echo "Sleeping"
     done
@@ -62,11 +62,17 @@ function test_writing_reading {
     # test reading
     start=$(date +%s)
     max_number_files=$number_files
-    number_files=0    
+    number_files=0
+    id=0    
     
-    while (( $(date +%s)-start < 300 && number_files<max_number_files)); do
-        cat "$destination_folder/file_${number_files=}" >> /dev/null
+    while (( $(date +%s)-start < 150 )); do
+        cat "$destination_folder/file_${id}" >> /dev/null
         number_files=$((number_files+1))
+        id=$((id+1))
+
+        if (( id == max_number_files )); then
+            id=0
+        fi
     done
     finish=$(date +%s)
     fst="$work_path $start $finish Test_type: $file_size Number_of_files: $number_files"
